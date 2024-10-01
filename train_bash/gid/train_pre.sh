@@ -13,6 +13,6 @@ python ../../train_deep_globe.py \
 --data_path /data1/gyl/RS_DATASET/FBP \
 --model_path ../../saved_models/gid/ \
 --log_path ../../runs/gid \
---pre_path ./ \
+--pre_path ../../saved_models/gid/ \
 --start 0 \
 --lens 70 \

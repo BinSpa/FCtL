@@ -167,7 +167,7 @@ def create_model_load_weights(n_class, pre_path="", glo_path_10="", glo_path_15=
     model = nn.DataParallel(model)
     model = model.cuda()
 
-    if pre_path != './saved_models_1/':
+    if pre_path.endswith('.pth'):
         print('prepareing model...') 
         # load fixed basic global branch
         partial = torch.load(pre_path)
@@ -185,7 +185,7 @@ def create_model_load_weights(n_class, pre_path="", glo_path_10="", glo_path_15=
         global_fixed_10 = MiniFCN8(n_class)
         global_fixed_10 = nn.DataParallel(global_fixed_10)
         global_fixed_10 = global_fixed_10.cuda()
-        if glo_path_10 != './saved_models_1/':
+        if glo_path_10.endswith('.pth'):
             partial = torch.load(glo_path_10)
             state = global_fixed_10.state_dict()
             pretrained_dict = {k: v for k, v in partial.items() if k in state}
@@ -199,7 +199,7 @@ def create_model_load_weights(n_class, pre_path="", glo_path_10="", glo_path_15=
         global_fixed_15 = MiniFCN8(n_class)
         global_fixed_15 = nn.DataParallel(global_fixed_15)
         global_fixed_15 = global_fixed_15.cuda()
-        if glo_path_15 != './saved_models_1/':
+        if glo_path_15.endswith('.pth'):
             partial = torch.load(glo_path_15)
             state = global_fixed_15.state_dict()
             pretrained_dict = {k: v for k, v in partial.items() if k in state}
