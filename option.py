@@ -12,7 +12,7 @@ class Options():
         parser.add_argument('--log_path', type=str, help='path to store tensorboard log files, no need to include task specific name')
         parser.add_argument('--task_name', type=str, help='task name for naming saved model files and log files')
         parser.add_argument('--mode', type=int, default=1, choices=[1, 2, 3], help='mode for training procedure. 1.fcn 2.fcn+1 3.fcn+2')
-        parser.add_argument('--dataset', type=int, default=2, choices=[1, 2], help='dataset for training procedure. 1.deep 2.IA')
+        parser.add_argument('--dataset', type=str, default='gid', choices=['gid', 'fbp', 'urur'], help='dataset for training procedure. 1.deep 2.IA')
         parser.add_argument('--train', action='store_true', default=False, help='train')
         parser.add_argument('--val', action='store_true', default=False, help='val')
         parser.add_argument('--context10', type=int, default=2, help='context10')

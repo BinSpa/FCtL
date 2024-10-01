@@ -216,7 +216,7 @@ def get_optimizer(model, learning_rate=2e-5):
     return optimizer
 
 class Trainer(object):
-    def __init__(self, criterion, optimizer, n_class, size_p, size_g, sub_batch_size=6, mode=1, dataset=1, context10=2, context15=3):
+    def __init__(self, criterion, optimizer, n_class, size_p, size_g, sub_batch_size=6, mode=1, dataset='gid', context10=2, context15=3):
         self.criterion = criterion
         self.optimizer = optimizer
         self.metrics = ConfusionMatrix(n_class)
@@ -284,7 +284,7 @@ class Trainer(object):
 
 
 class Evaluator(object):
-    def __init__(self, n_class, size_p, size_g, sub_batch_size=6, mode=1, val=True, dataset=1, context10=2, context15=3):
+    def __init__(self, n_class, size_p, size_g, sub_batch_size=6, mode=1, val=True, dataset='gid', context10=2, context15=3):
         self.metrics = ConfusionMatrix(n_class)
         self.n_class = n_class
         self.size_p = size_p

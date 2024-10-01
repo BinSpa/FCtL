@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 from tqdm import tqdm
-from dataset.deep_globe import DeepGlobe, classToRGB, is_image_file
+from dataset import *
 from utils.loss import FocalLoss
 from utils.lr_scheduler import LR_Scheduler
 from tensorboardX import SummaryWriter
@@ -18,14 +18,16 @@ from option import Options
 
 args = Options().parse()
 dataset = args.dataset
+'''
 if dataset == 1:
     pass
 elif dataset == 2:
     args.n_class = 2
     args.data_path = "./data_1/"
     args.model_path = "./saved_models_1/"
-    args.log_path = "./runs_1/"
-n_class = args.n_class #2 
+    args.log_path = "./runs_1/" 
+'''
+n_class = args.n_class #2
 print("n_class:",n_class)
 
 torch.backends.cudnn.deterministic = True
@@ -50,16 +52,56 @@ batch_size = args.batch_size
 num_worker = 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-ids_train = [image_name for image_name in os.listdir(os.path.join(data_path, "train", "Sat")) if is_image_file(image_name)]
-ids_test = [image_name for image_name in os.listdir(os.path.join(data_path, "offical_crossvali", "Sat")) if is_image_file(image_name)]
-ids_val = [image_name for image_name in os.listdir(os.path.join(data_path, "crossvali", "Sat")) if is_image_file(image_name)]
+if dataset == 'deepglobe':
+    ids_train = [image_name for image_name in os.listdir(os.path.join(data_path, "train", "Sat")) if is_image_file(image_name)]
+    ids_test = [image_name for image_name in os.listdir(os.path.join(data_path, "offical_crossvali", "Sat")) if is_image_file(image_name)]
+    ids_val = [image_name for image_name in os.listdir(os.path.join(data_path, "crossvali", "Sat")) if is_image_file(image_name)]
 
-dataset_train = DeepGlobe(dataset, os.path.join(data_path, "train"), ids_train, label=True, transform=True)
-dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=num_worker, collate_fn=collate, shuffle=True, pin_memory=True)
-dataset_test = DeepGlobe(dataset, os.path.join(data_path, "offical_crossvali"), ids_test, label=False)
-dataloader_test = torch.utils.data.DataLoader(dataset=dataset_test, batch_size=batch_size, num_workers=num_worker, collate_fn=collate_test, shuffle=False, pin_memory=True)
-dataset_val = DeepGlobe(dataset, os.path.join(data_path, "crossvali"), ids_val, label=True)
-dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=num_worker, collate_fn=collate, shuffle=False, pin_memory=True)
+    dataset_train = DeepGlobe(dataset, os.path.join(data_path, "train"), ids_train, label=True, transform=True)
+    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=num_worker, collate_fn=collate, shuffle=True, pin_memory=True)
+    dataset_test = DeepGlobe(dataset, os.path.join(data_path, "offical_crossvali"), ids_test, label=False)
+    dataloader_test = torch.utils.data.DataLoader(dataset=dataset_test, batch_size=batch_size, num_workers=num_worker, collate_fn=collate_test, shuffle=False, pin_memory=True)
+    dataset_val = DeepGlobe(dataset, os.path.join(data_path, "crossvali"), ids_val, label=True)
+    dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=num_worker, collate_fn=collate, shuffle=False, pin_memory=True)
+elif dataset == 'gid':
+    batch_size = args.batch_size
+    ids_train = [image_name for image_name in os.listdir(os.path.join(data_path, "train", "rgb_images"))]
+    ids_val = [image_name for image_name in os.listdir(os.path.join(data_path, "val", "rgb_images"))]
+    ids_test = ids_val
+
+    dataset_train = GID(os.path.join(data_path, "train"), ids_train, label=True, transform=True)
+    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True)
+    dataset_val = GID(os.path.join(data_path, "val"), ids_val, label=True)
+    dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=False, pin_memory=True)
+    dataset_test = GID(os.path.join(data_path, "val"), ids_test, label=True)
+    dataloader_test = torch.utils.data.DataLoader(dataset=dataset_test, batch_size=batch_size, num_workers=10, collate_fn=collate_test, shuffle=False, pin_memory=True)
+elif dataset == 'fbp':
+    batch_size = args.batch_size
+    ids_train = [image_name for image_name in os.listdir(os.path.join(data_path, "train", "rgb_images"))]
+    ids_val = [image_name for image_name in os.listdir(os.path.join(data_path, "val", "rgb_images"))]
+    ids_test = ids_val
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    dataset_train = FBP(os.path.join(data_path, "train"), ids_train, label=True, transform=True)
+    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True, persistent_workers=True)
+    dataset_val = FBP(os.path.join(data_path, "val"), ids_val, label=True)
+    dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=False, pin_memory=True, persistent_workers=True)
+    dataset_test = FBP(os.path.join(data_path, "val"), ids_test, label=True)
+    dataloader_test = torch.utils.data.DataLoader(dataset=dataset_test, batch_size=batch_size, num_workers=10, collate_fn=collate_test, shuffle=False, pin_memory=True)
+elif dataset == 'urur':
+    batch_size = args.batch_size
+    ids_train = [image_name for image_name in os.listdir(os.path.join(data_path, "train", "image"))]
+    ids_val = [image_name for image_name in os.listdir(os.path.join(data_path, "val", "image"))]
+    ids_test = ids_val
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    dataset_train = URUR(os.path.join(data_path, "train"), ids_train, label=True, transform=True)
+    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True)
+    dataset_val = URUR(os.path.join(data_path, "test"), ids_val, label=True)
+    dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=False, pin_memory=True)
+    dataset_test = URUR(os.path.join(data_path, "test"), ids_test, label=True)
+    dataloader_test = torch.utils.data.DataLoader(dataset=dataset_test, batch_size=batch_size, num_workers=10, collate_fn=collate_test, shuffle=False, pin_memory=True)
+
 print('train_len:',len(ids_train))
 print('test_len:',len(ids_test)) 
 print('val_len:',len(ids_val)) 
@@ -122,7 +164,7 @@ np.mean(np.nan_to_num(score_train["iou"][1:]))))
     trainer.reset_metrics()
     # torch.cuda.empty_cache()
         
-    if (epoch+1) % 5 == 0:
+    if (epoch+1) % 10 == 0:
         with torch.no_grad():
             print("evaling...")
             model.eval()
@@ -140,7 +182,7 @@ np.mean(np.nan_to_num(score_train["iou"][1:]))))
                     writer.add_image('mask', classToRGB(dataset, np.array(labels[(epoch % len(dataloader_val)) - i_batch * batch_size])) , epoch)
                     writer.add_image('prediction', classToRGB(dataset, predictions[(epoch % len(dataloader_val)) - i_batch * batch_size]), epoch)
 
-            torch.save(model.state_dict(), model_path + task_name + ".epoch" + str(epoch) + ".pth")
+            torch.save(model.state_dict(), model_path + dataset + task_name + ".epoch" + str(epoch) + ".pth")
 
             score_val = evaluator.get_scores()
             evaluator.reset_metrics()
