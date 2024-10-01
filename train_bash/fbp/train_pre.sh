@@ -11,7 +11,7 @@ python ../../train_deep_globe.py \
 --train \
 --val \
 --data_path /data1/gyl/RS_DATASET/FBP \
---model_path ../../saved_models/fbp \
+--model_path ../../saved_models/fbp/ \
 --log_path ../../runs/fbp \
 --pre_path ./ \
 --start 0 \
