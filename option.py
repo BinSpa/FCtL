@@ -24,6 +24,8 @@ class Options():
         parser.add_argument('--sub_batch_size', type=int, default=6, help='batch size for using local image patches')
         parser.add_argument('--size_p', type=int, default=508, help='size (in pixel) for cropped local image')
         parser.add_argument('--size_g', type=int, default=508, help='size (in pixel) for resized global image')
+        parser.add_argument('--start', type=int, default=50, help='the start epoch')
+        parser.add_argument('--lens', type=int, default=50, help='the epoch len')
 
         # the parser
         self.parser = parser
@@ -31,7 +33,7 @@ class Options():
     def parse(self):
         args = self.parser.parse_args()
         args.num_epochs = 100
-        args.start = 50
-        args.lens = 50
+        # args.start = 50
+        # args.lens = 50
         args.lr = 5e-5
         return args
