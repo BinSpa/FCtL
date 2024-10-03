@@ -5,7 +5,7 @@ python ../../train_deep_globe.py \
 --mode 2 \
 --dataset 'gid' \
 --batch_size 6 \
---sub_batch_size 24 \
+--sub_batch_size 16 \
 --size_p 508 \
 --size_g 508 \
 --pre_path ../../saved_models/gid/gidBfcn.epoch69.pth \
