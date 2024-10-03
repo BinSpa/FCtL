@@ -164,7 +164,7 @@ np.mean(np.nan_to_num(score_train["iou"][1:]))))
     trainer.reset_metrics()
     # torch.cuda.empty_cache()
         
-    if (epoch+1) % 10 == 0:
+    if (epoch+1) % 5 == 0:
         with torch.no_grad():
             print("evaling...")
             model.eval()
