@@ -1,5 +1,5 @@
 # export CUDA_VISIBLE_DEVICES=0
-python train_deep_globe.py \
+python ../../train_deep_globe.py \
 --task_name "B15" \
 --n_class 6 \
 --mode 2 \
