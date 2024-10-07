@@ -1,5 +1,5 @@
 # export CUDA_VISIBLE_DEVICES=0
-../../python train_deep_globe.py \
+python ../../train_deep_globe.py \
 --task_name "all" \
 --mode 3 \
 --dataset 'gid' \
