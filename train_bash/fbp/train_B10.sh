@@ -5,7 +5,7 @@ python ../../train_deep_globe.py \
 --mode 2 \
 --dataset 'fbp' \
 --batch_size 6 \
---sub_batch_size 16 \
+--sub_batch_size 10 \
 --size_p 508 \
 --size_g 508 \
 --pre_path ../../saved_models/fbp/fbpBfcn.epoch29.pth \
