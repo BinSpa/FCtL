@@ -10,7 +10,7 @@ python ../../train_deep_globe.py \
 --size_g 508 \
 --glo_path_10 "../../saved_models/fbp/fbpB10.epoch49.pth" \
 --glo_path_15 "../../saved_models/fbp/fbpB15.epoch39.pth" \
---pre_path "../../saved_models/fbp/gidBfcn.epoch29.pth" \
+--pre_path "../../saved_models/fbp/fbpBfcn.epoch29.pth" \
 --train \
 --val \
 --data_path /data1/gyl/RS_DATASET/FBP \
